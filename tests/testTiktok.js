@@ -18,6 +18,37 @@ const opts = {
 };
 
 /**
+ * Instala sndcpy.apk y lo ejecuta en un solo comando
+ * @param {string} sndcpyPath - Ruta del directorio donde se encuentra sndcpy
+ */
+function installAndRunSndcpy(sndcpyPath) {
+    console.log("Instalando sndcpy.apk y ejecutándolo...");
+
+    // Comando combinado para instalar y ejecutar sndcpy
+    const command = `adb install "${sndcpyPath}\\sndcpy.apk" && start ${sndcpyPath}\\sndcpy`;
+
+    const process = spawn("cmd.exe", ["/c", command], { shell: true });
+
+    process.stdout.on("data", (data) => {
+        console.log(`Salida: ${data}`);
+    });
+
+    process.stderr.on("data", (data) => {
+        console.error(`Error: ${data}`);
+    });
+
+    process.on("exit", (code) => {
+        if (code === 0) {
+            console.log("sndcpy instalado y ejecutado exitosamente.");
+        } else {
+            console.error(`Error durante la instalación/ejecución de sndcpy. Código de salida: ${code}`);
+        }
+    });
+
+    return process;
+}
+
+/**
  * Inicia la grabación de audio utilizando FFmpeg
  * @param {string} deviceName - Nombre del dispositivo de entrada de audio
  * @param {string} outputFile - Ruta del archivo MP3 de salida
@@ -108,6 +139,15 @@ async function swipe(driver, startX, startY, endX, endY, duration = 300) {
 }
 
 async function main() {
+    // Ruta al directorio de sndcpy
+    const sndcpyPath = "C:\\sndcpy";
+
+    // Instalar y ejecutar sndcpy
+    installAndRunSndcpy(sndcpyPath);
+
+    // Esperar unos segundos para asegurarte de que sndcpy se ejecute correctamente
+    await new Promise((resolve) => setTimeout(resolve, 5000)); // Ajusta el tiempo si es necesario
+
     const driver = await wdio.remote(opts);
     console.log("¡TikTok iniciado exitosamente!");
 

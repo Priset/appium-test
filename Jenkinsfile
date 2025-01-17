@@ -50,9 +50,9 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) {
-                        sh 'node main.js' // Ejecuta el script principal en Linux/Mac
+                        sh 'node testTiktok.js' // Ejecuta el script principal en Linux/Mac
                     } else {
-                        bat 'node main.js' // Ejecuta el script principal en Windows
+                        bat 'node testTiktok.js' // Ejecuta el script principal en Windows
                     }
                 }
             }
